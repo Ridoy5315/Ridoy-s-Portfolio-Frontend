@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Space_Grotesk, DM_Sans, Noto_Serif_SC } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Space_Grotesk,
+  DM_Sans,
+  Noto_Serif_SC,
+} from "next/font/google";
 import "./globals.css";
+import AuthProvider from "@/providers/AuthProvider";
+import { Toaster } from "sonner";
 
 export const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +22,7 @@ export const geistMono = Geist_Mono({
 
 export const fontHeading = Space_Grotesk({
   variable: "--font-heading",
-  subsets: ["latin"]
+  subsets: ["latin"],
 });
 
 export const fontBody = DM_Sans({
@@ -40,9 +47,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <AuthProvider>
+          <Toaster richColors position="top-center" />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
