@@ -37,7 +37,8 @@ export function LoginForm() {
     const toastId = toast.loading("Signing you in...");
     try {
       const res = await signIn("credentials", {
-        ...values
+        ...values,
+        callbackUrl: "/dashboard",
       });
       toast.success("✅ Signed in successfully", { id: toastId });
 

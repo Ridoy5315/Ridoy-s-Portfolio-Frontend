@@ -1,18 +1,16 @@
-import { AlertCircleIcon, ImageUpIcon, XIcon } from "lucide-react";
+import { AlertCircleIcon, ImageUpIcon, XIcon } from "lucide-react"
 
-import { useFileUpload } from "@/hooks/use-file-upload";
-import { useEffect } from "react";
+import { useFileUpload } from "@/hooks/use-file-upload"
+import { useEffect } from "react"
 import Image from "next/image";
 
 interface SingleImageUploaderProps {
   onChange: (file: File | null) => void;
 }
 
-export default function SingleImageUploader({
-  onChange,
-}: SingleImageUploaderProps) {
-  const maxSizeMB = 5;
-  const maxSize = maxSizeMB * 1024 * 1024; // 5MB default
+export default function SingleImageUploader({ onChange }: SingleImageUploaderProps) {
+  const maxSizeMB = 5
+  const maxSize = maxSizeMB * 1024 * 1024 // 5MB default
 
   const [
     { files, isDragging, errors },
@@ -28,7 +26,7 @@ export default function SingleImageUploader({
   ] = useFileUpload({
     accept: "image/*",
     maxSize,
-  });
+  })
 
   useEffect(() => {
     if (files.length > 0) {
@@ -41,9 +39,9 @@ export default function SingleImageUploader({
     } else {
       onChange(null);
     }
-  }, [files, onChange]);
+  }, [files, onChange])
 
-  const previewUrl = files[0]?.preview || null;
+  const previewUrl = files[0]?.preview || null
 
   return (
     <div className="flex flex-col gap-2">
@@ -66,7 +64,7 @@ export default function SingleImageUploader({
           />
           {previewUrl ? (
             <div className="absolute inset-0">
-              <Image
+               <Image
                 src={previewUrl}
                 alt={files[0]?.file?.name || "Uploaded image"}
                 width={500}
@@ -120,5 +118,5 @@ export default function SingleImageUploader({
         </div>
       )}
     </div>
-  );
+  )
 }
