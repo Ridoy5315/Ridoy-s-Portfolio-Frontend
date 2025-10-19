@@ -1,9 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const BlogCard = ({blog}) => {
   return (
-    <div>
+    <Link href={`/dashboard/blogs/${blog?.id}`}>
       {blog?.file ? (
         <div className="relative h-56 w-full overflow-hidden">
           <Image
@@ -23,7 +24,7 @@ const BlogCard = ({blog}) => {
         <p>{blog?.description}</p>
         <p>{blog?.content}</p>
       </div>
-    </div>
+    </Link>
   );
 };
 
