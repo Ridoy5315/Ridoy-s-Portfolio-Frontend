@@ -1,6 +1,6 @@
 "use client";
 
-import { create } from "@/actions/create";
+import { create } from "@/actions/blog/create";
 import SingleImageUploader from "@/components/SingleImageUploader";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +25,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { redirect, useRouter } from "next/navigation";
 // import Form from "next/form";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -45,6 +46,7 @@ const blogSchema = z.object({
 const CreateBlogFormModal = () => {
   // const [isFeatured, setIsFeatured] = useState("false");
   // const [image, setImage] = useState<File | null>(null);
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const form = useForm({
     resolver: zodResolver(blogSchema),
@@ -59,8 +61,6 @@ const CreateBlogFormModal = () => {
 
   const onSubmit = async (data: z.infer<typeof blogSchema>) => {
     const toastId = toast.loading(`Publishing "${data?.title}"...”`);
-    console.log(data);
-    console.log(data?.title);
 
     const formData = new FormData();
     formData.append("title", data.title);
@@ -75,7 +75,6 @@ const CreateBlogFormModal = () => {
 
     const res = await create(formData);
     console.log(res);
-    console.log(res?.data?.title);
     if (res.success) {
       toast.success(
         `✅ "${res?.data?.title}" has been published successfully!`,
@@ -83,6 +82,8 @@ const CreateBlogFormModal = () => {
       );
       form.reset();
       setOpen(false);
+
+      router.push("/dashboard/blogs");
     } else {
       toast.error(`❌ Failed to publish "${data?.title}".`, { id: toastId });
     }

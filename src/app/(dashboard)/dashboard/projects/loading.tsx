@@ -1,7 +1,7 @@
 import Loading from '@/components/ui/Loading';
 import React from 'react';
 
-const BlogsLoadingPage = () => {
+const ProjectLoadingPage = () => {
      return (
           <div className='py-28'>
                <Loading></Loading>
@@ -9,4 +9,4 @@ const BlogsLoadingPage = () => {
      );
 };
 
-export default BlogsLoadingPage;
+export default ProjectLoadingPage;

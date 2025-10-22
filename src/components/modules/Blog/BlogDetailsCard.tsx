@@ -32,10 +32,10 @@ export default function BlogDetailsCard({ blog }: { blog: any }) {
         </div> */}
       </div>
 
-      {blog.thumbnail && (
+      {blog.file && (
         <div className="relative h-80 w-full overflow-hidden">
           <Image
-            src={blog.thumbnail}
+            src={blog.file}
             alt={blog.title}
             fill
             className="rounded-lg object-cover shadow-md"
