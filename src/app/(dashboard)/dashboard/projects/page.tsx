@@ -16,7 +16,7 @@ const ManageProjectsPage = async() => {
     <div>
       <h1>All Projects</h1>
       <Button>
-        <Link href="/dashboard/projects/createProjects">Create Project</Link>
+        <Link href="/dashboard/projects/createProject">Create Project</Link>
       </Button>
       <div className="grid grid-cols-3 gap-6">
         {projects.map((project) => (

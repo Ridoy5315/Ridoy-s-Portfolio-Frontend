@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
+import { FaLink } from "react-icons/fa";
 
 const ProjectCard = ({ project }) => {
+  console.log(project)
   return (
     <Link href={`/dashboard/projects/${project?.id}`}>
       {project?.thumbnail ? (
@@ -23,6 +25,7 @@ const ProjectCard = ({ project }) => {
         <p>{project?.description}</p>
         {/* <p>{project?.content}</p> */}
       </div>
+      
     </Link>
   );
 };

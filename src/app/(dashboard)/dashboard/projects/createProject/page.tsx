@@ -82,7 +82,6 @@ const CreateProjectPage = () => {
     formData.append("projectLiveLink", data.projectLiveLink);
     formData.append("githubClientSideLink", data.githubClientSideLink);
     formData.append("githubServerSideLink", data.githubServerSideLink);
-    // serialize arrays before appending
     formData.append("mainTechnologyStackUsed", JSON.stringify(projectData.mainTechnologyStackUsed));
     formData.append("challengesFaced", JSON.stringify(projectData.challengesFaced));
     formData.append("improvementsAndPlans", JSON.stringify(projectData.improvementsAndPlans));
