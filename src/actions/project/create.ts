@@ -6,8 +6,6 @@ import { revalidatePath, revalidateTag } from "next/cache";
 export const create = async (data: FormData) => {
   const session = await getUserSession();
 
-  console.log(data);
-
   const file = data.get("file") as File | null;
 
   const projectInfo = Object.fromEntries(
@@ -50,7 +48,7 @@ export const create = async (data: FormData) => {
   });
 
   const result = await res.json();
-  console.log("result", result);
+
   if (result?.data?.id) {
     revalidateTag("PROJECTS");
     revalidatePath("/project");
