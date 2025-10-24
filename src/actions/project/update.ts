@@ -48,7 +48,7 @@ export const updateProject = async (id: string, data: FormData) => {
   console.log("result", result);
   if (result?.data?.id) {
     revalidateTag("PROJECTS");
-    revalidatePath("/project");
+    revalidatePath("/projects");
   }
 
   return result;

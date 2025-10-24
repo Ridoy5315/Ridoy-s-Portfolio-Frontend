@@ -51,7 +51,7 @@ export const create = async (data: FormData) => {
 
   if (result?.data?.id) {
     revalidateTag("PROJECTS");
-    revalidatePath("/project");
+    revalidatePath("/projects");
   }
 
   return result;

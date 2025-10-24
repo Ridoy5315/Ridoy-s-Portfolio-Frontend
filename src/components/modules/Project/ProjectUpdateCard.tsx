@@ -105,6 +105,8 @@ const ProjectUpdateCard = ({ project }) => {
       improvementsAndPlans: (data.improvementsAndPlans ?? []).map((item: { value: string }) => item.value),
     };
 
+    console.log(projectData)
+
     const formData = new FormData();
 
     formData.append("projectName", data.projectName ?? "");

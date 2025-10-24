@@ -25,10 +25,11 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Plus, Trash2 } from "lucide-react";
 import { redirect, useRouter } from "next/navigation";
 // import Form from "next/form";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -36,7 +37,11 @@ const blogSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
   description: z.string().min(10, "Description must be at least 10 characters"),
   content: z.string().min(20, "Content must be at least 20 characters"),
-  tags: z.string().min(2, "Tags must be at least 2 characters"),
+  tags: z.array(
+    z.object({
+      value: z.string(),
+    })
+  ),
   isFeatured: z.string().min(2, "Featured selection is required"),
   thumbnail: z
     .any()
@@ -54,7 +59,7 @@ const CreateBlogFormModal = () => {
       title: "",
       description: "",
       content: "",
-      tags: "",
+      tags: [{ value: "" }],
       isFeatured: "",
     },
   });
@@ -62,32 +67,44 @@ const CreateBlogFormModal = () => {
   const onSubmit = async (data: z.infer<typeof blogSchema>) => {
     const toastId = toast.loading(`Publishing "${data?.title}"...”`);
 
+    const blogData = {
+      ...data,
+      tags: data.tags.map((item: { value: string }) => item.value),
+    };
+
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("description", data.description);
     formData.append("content", data.content);
-    formData.append("tags", data.tags);
-    formData.append("isFeatured", data.isFeatured);
+    formData.append("tags", JSON.stringify(blogData.tags));
+    formData.append("isFeatured", blogData.isFeatured);
 
     if (data.thumbnail) {
       formData.append("file", data.thumbnail as File);
     }
+    try {
+      const res = await create(formData);
+      console.log(res);
+      if (res.success) {
+        toast.success(
+          `✅ "${res?.data?.title}" has been published successfully!`,
+          { id: toastId }
+        );
+        form.reset();
+        setOpen(false);
 
-    const res = await create(formData);
-    console.log(res);
-    if (res.success) {
-      toast.success(
-        `✅ "${res?.data?.title}" has been published successfully!`,
-        { id: toastId }
-      );
-      form.reset();
-      setOpen(false);
-
-      router.push("/dashboard/blogs");
-    } else {
+        router.push("/dashboard/blogs");
+      }
+    } catch (error) {
       toast.error(`❌ Failed to publish "${data?.title}".`, { id: toastId });
     }
   };
+
+  // Tags
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "tags",
+  });
 
   return (
     <>
@@ -176,23 +193,50 @@ const CreateBlogFormModal = () => {
 
               <div className="grid  grid-cols-2 gap-6">
                 {/* tags */}
-                <FormField
-                  control={form.control}
-                  name="tags"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tags (comma separated)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Enter title"
-                          {...field}
+                <div>
+                  <div className="flex justify-between">
+                    <p>Add Tags</p>
+                    <Button
+                      type="button"
+                      size="icon"
+                      onClick={() => append({ value: "" })}
+                    >
+                      <Plus></Plus>
+                    </Button>
+                  </div>
+                  <div>
+                    {fields.map((item, index) => (
+                      <div className="flex gap-3" key={item.id}>
+                        <FormField
+                          control={form.control}
+                          name={`tags.${index}.value`}
+                          render={({ field }) => (
+                            <FormItem className="flex-1">
+                              {/* <FormLabel>Project Name</FormLabel> */}
+                              <FormControl>
+                                <Input
+                                  type="text"
+                                  placeholder="Enter tags"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <Button
+                          onClick={() => remove(index)}
+                          size="icon"
+                          type="button"
+                          className="cursor-pointer"
+                        >
+                          {" "}
+                          <Trash2></Trash2>
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
                 {/* featured */}
 

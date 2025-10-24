@@ -24,7 +24,7 @@ const navigationLinks = [
   { href: "/", label: "Home" },
   { href: "/blogs", label: "Blogs" },
   { href: "/aboutMe", label: "About Me" },
-  { href: "/project", label: "Project" },
+  { href: "/projects", label: "Project" },
   { href: "/dashboard", label: "Dashboard" },
 ];
 

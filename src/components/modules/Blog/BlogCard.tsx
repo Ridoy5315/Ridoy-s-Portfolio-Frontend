@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const BlogCard = ({blog}) => {
+const BlogCard = ({ blog }) => {
   return (
     <Link href={`/dashboard/blogs/${blog?.id}`}>
       {blog?.file ? (
@@ -10,7 +10,8 @@ const BlogCard = ({blog}) => {
           <Image
             src={blog.file}
             alt={blog.title}
-            fill
+            width={500}
+            height={500}
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </div>

@@ -71,11 +71,6 @@ export default function SingleImageUploader({ onChange }: SingleImageUploaderPro
                 height={500}
                 className="size-full object-cover"
               ></Image>
-              {/* <img
-                src={previewUrl}
-                alt={files[0]?.file?.name || "Uploaded image"}
-                className="size-full object-cover"
-              /> */}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center px-4 py-3 text-center">

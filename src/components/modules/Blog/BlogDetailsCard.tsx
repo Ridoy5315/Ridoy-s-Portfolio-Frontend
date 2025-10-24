@@ -1,4 +1,6 @@
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 export default function BlogDetailsCard({ blog }: { blog: any }) {
@@ -46,6 +48,11 @@ export default function BlogDetailsCard({ blog }: { blog: any }) {
       <article className="prose prose-lg max-w-none">
         <p>{blog.content}</p>
       </article>
+      <Button>
+        <Link href={`/dashboard/blogs/${blog?.id}/updateBlog`}>
+          Update Project
+        </Link>
+      </Button>
     </main>
   );
 }
