@@ -16,7 +16,7 @@ interface IProps {
   onConfirm: () => void;
 }
 
-export default function ProjectDeleteModal({ children, onConfirm }: IProps) {
+export default function DeleteModal({ children, onConfirm }: IProps) {
   const handleConfirm = () => {
     onConfirm();
   };
@@ -25,14 +25,15 @@ export default function ProjectDeleteModal({ children, onConfirm }: IProps) {
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure to delete this project?</AlertDialogTitle>
+          <AlertDialogTitle>Are you sure to delete this?</AlertDialogTitle>
           <AlertDialogDescription>
-            Rejecting this ride will remove it from your pending requests.
+            This will permanently delete. Are you sure you want to continue?
           </AlertDialogDescription>
         </AlertDialogHeader>
+
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleConfirm}>
+          <AlertDialogAction onClick={handleConfirm} className="cursor-pointer">
             Continue
           </AlertDialogAction>
         </AlertDialogFooter>

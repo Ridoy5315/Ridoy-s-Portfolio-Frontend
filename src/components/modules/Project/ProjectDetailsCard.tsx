@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { FaLink } from "react-icons/fa";
-import ProjectDeleteModal from "./ProjectDeleteModal";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import DeleteModal from "../modal/DeleteModal";
 
 const ProjectDetailsCard = ({ project }) => {
   const router = useRouter();
@@ -68,11 +68,9 @@ const ProjectDetailsCard = ({ project }) => {
           Update Project
         </Link>
       </Button>
-      <ProjectDeleteModal
-        onConfirm={() => project?.data?.id && handleDelete(project?.data)}
-      >
+      <DeleteModal onConfirm={() => project?.data?.id && handleDelete(project?.data)}>
         <Button>Delete</Button>
-      </ProjectDeleteModal>
+      </DeleteModal>
     </main>
   );
 };

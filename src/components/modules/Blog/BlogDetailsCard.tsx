@@ -1,14 +1,46 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import DeleteModal from "../modal/DeleteModal";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function BlogDetailsCard({ blog }: { blog: any }) {
+  const router = useRouter();
   if (!blog) {
     return (
       <div className="py-20 text-center text-gray-500">Blog not found.</div>
     );
   }
+
+  const handleDelete = async (data) => {
+    const toastId = toast.loading(`Deleting "${data?.title}"...”`);
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/blog/${data?.id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (res.ok) {
+      toast.success(
+        `✅ "${data?.title}" has been deleted successfully!`,
+        { id: toastId }
+      );
+
+      router.push("/dashboard/blogs");
+    }
+    } catch (error) {
+      toast.error(`❌ Failed to delete "${data?.title}".`, {
+        id: toastId,
+      });
+    }
+
+  };
   return (
     <main className="max-w-4xl mx-auto py-30 px-4">
       <h1 className="text-5xl font-bold mb-6">{blog?.title}</h1>
@@ -53,6 +85,11 @@ export default function BlogDetailsCard({ blog }: { blog: any }) {
           Update Project
         </Link>
       </Button>
+      <DeleteModal
+        onConfirm={() => blog?.id && handleDelete(blog)}
+      >
+        <Button>Delete</Button>
+      </DeleteModal>
     </main>
   );
 }
