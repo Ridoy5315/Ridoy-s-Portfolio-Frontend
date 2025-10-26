@@ -21,17 +21,18 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 
 const navigationLinks = [
-  { href: "/", label: "Home" },
-  { href: "/blogs", label: "Blogs" },
-  { href: "/aboutMe", label: "About Me" },
-  { href: "/projects", label: "Project" },
-  { href: "/dashboard", label: "Dashboard" },
+  { href: "/", label: "Home" , role: "public"},
+  { href: "/blogs", label: "Blogs", role: "public" },
+  { href: "/aboutMe", label: "About Me", role: "public" },
+  { href: "/projects", label: "Project", role: "public" },
+  { href: "/dashboard", label: "Dashboard", role: "authenticated" },
 ];
 
 export function NavMenu() {
   const [isMobile, setIsMobile] = useState(false);
   //     const containerRef = useRef<HTMLElement>(null);
   const session = useSession();
+
   return (
     <header
       className={cn(
@@ -88,7 +89,7 @@ export function NavMenu() {
             {!isMobile && (
               <NavigationMenu className="flex">
                 <NavigationMenuList className="gap-1">
-                  {navigationLinks.map((link, index) => (
+                  {navigationLinks.filter((link) => link.role === "public" || link.role === session?.status).map((link, index) => (
                     <NavigationMenuLink key={index} href={link.href}>
                       <button className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer no-underline">
                         {link.label}
@@ -102,21 +103,24 @@ export function NavMenu() {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-3">
-          {session?.status === "authenticated" ? <Button
+          {session?.status === "authenticated" ? (
+            <Button
               variant="ghost"
               size="sm"
               className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
               onClick={() => signOut()}
             >
               Logout
-            </Button> : <Button
+            </Button>
+          ) : (
+            <Button
               variant="ghost"
               size="sm"
               className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
             >
               <Link href="/login">Login</Link>
-            </Button>}
-            
+            </Button>
+          )}
         </div>
       </div>
     </header>

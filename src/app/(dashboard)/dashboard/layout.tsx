@@ -1,12 +1,21 @@
 import { AppSidebar } from "@/components/shared/Sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { getUserSession } from "@/helpers/getUserSession";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import React from "react";
 
-const DashboardLayout = ({
+const DashboardLayout = async ({
   children,
 }: Readonly<{ children: React.ReactNode }>) => {
+
+  const session =  await getUserSession();
+  console.log(session?.user)
+  if(!session || session?.user?.email !== process.env.NEXT_PUBLIC_OWNER_EMAIL){
+    redirect("/unauthorized");
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar />

@@ -38,7 +38,7 @@ export function LoginForm() {
     try {
       const res = await signIn("credentials", {
         ...values,
-        callbackUrl: "/dashboard",
+        callbackUrl: "/",
       });
       toast.success("✅ Signed in successfully", { id: toastId });
 

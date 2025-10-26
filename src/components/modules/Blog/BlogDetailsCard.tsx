@@ -6,9 +6,16 @@ import Link from "next/link";
 import React from "react";
 import DeleteModal from "../modal/DeleteModal";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-export default function BlogDetailsCard({ blog }: { blog: any }) {
+const BlogDetailsCard = ({ blog }: { blog: any }) => {
+  const session = useSession();
+  const user = session?.data?.user;
+
+  const pathname = usePathname();
+  const adminActions = pathname.startsWith("/dashboard");
+
   const router = useRouter();
   if (!blog) {
     return (
@@ -20,26 +27,25 @@ export default function BlogDetailsCard({ blog }: { blog: any }) {
     const toastId = toast.loading(`Deleting "${data?.title}"...”`);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/blog/${data?.id}`,
-      {
-        method: "DELETE",
-      }
-    );
-
-    if (res.ok) {
-      toast.success(
-        `✅ "${data?.title}" has been deleted successfully!`,
-        { id: toastId }
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API}/blog/${data?.id}`,
+        {
+          method: "DELETE",
+        }
       );
 
-      router.push("/dashboard/blogs");
-    }
+      if (res.ok) {
+        toast.success(`✅ "${data?.title}" has been deleted successfully!`, {
+          id: toastId,
+        });
+
+        router.push("/dashboard/manageBlogs");
+      }
     } catch (error) {
       toast.error(`❌ Failed to delete "${data?.title}".`, {
         id: toastId,
       });
     }
-
   };
   return (
     <main className="max-w-4xl mx-auto py-30 px-4">
@@ -80,16 +86,23 @@ export default function BlogDetailsCard({ blog }: { blog: any }) {
       <article className="prose prose-lg max-w-none">
         <p>{blog.content}</p>
       </article>
-      <Button>
-        <Link href={`/dashboard/blogs/${blog?.id}/updateBlog`}>
-          Update Project
-        </Link>
-      </Button>
-      <DeleteModal
-        onConfirm={() => blog?.id && handleDelete(blog)}
-      >
-        <Button>Delete</Button>
-      </DeleteModal>
+
+      {adminActions &&
+        user &&
+        user?.email === process.env.NEXT_PUBLIC_OWNER_EMAIL && (
+          <div>
+            <Button>
+              <Link href={`/dashboard/blogs/${blog?.id}/updateBlog`}>
+                Update Project
+              </Link>
+            </Button>
+            <DeleteModal onConfirm={() => blog?.id && handleDelete(blog)}>
+              <Button>Delete</Button>
+            </DeleteModal>
+          </div>
+        )}
     </main>
   );
-}
+};
+
+export default BlogDetailsCard;

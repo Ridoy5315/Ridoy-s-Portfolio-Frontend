@@ -5,10 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaLink } from "react-icons/fa";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import DeleteModal from "../modal/DeleteModal";
+import { useSession } from "next-auth/react";
 
 const ProjectDetailsCard = ({ project }) => {
+  const session = useSession();
+  const user = session?.data?.user;
+
+  const pathname = usePathname();
+  const adminActions = pathname.startsWith("/dashboard");
+
   const router = useRouter();
   if (!project) {
     return (
@@ -20,26 +27,25 @@ const ProjectDetailsCard = ({ project }) => {
 
     try {
       const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/project/${data?.id}`,
-      {
-        method: "DELETE",
-      }
-    );
-
-    if (res.ok) {
-      toast.success(
-        `✅ "${data?.projectName}" has been deleted successfully!`,
-        { id: toastId }
+        `${process.env.NEXT_PUBLIC_BASE_API}/project/${data?.id}`,
+        {
+          method: "DELETE",
+        }
       );
 
-      router.push("/dashboard/projects");
-    }
+      if (res.ok) {
+        toast.success(
+          `✅ "${data?.projectName}" has been deleted successfully!`,
+          { id: toastId }
+        );
+
+        router.push("/dashboard/projects");
+      }
     } catch (error) {
       toast.error(`❌ Failed to delete "${data?.projectName}".`, {
         id: toastId,
       });
     }
-
   };
   return (
     <main className="max-w-4xl mx-auto py-30 px-4">
@@ -63,14 +69,24 @@ const ProjectDetailsCard = ({ project }) => {
         <FaLink></FaLink>
         <a href={project?.data?.githubClientSideLink}>Example Link</a>
       </div>
-      <Button>
-        <Link href={`/dashboard/projects/${project?.data?.id}/updateProject`}>
-          Update Project
-        </Link>
-      </Button>
-      <DeleteModal onConfirm={() => project?.data?.id && handleDelete(project?.data)}>
-        <Button>Delete</Button>
-      </DeleteModal>
+      {adminActions &&
+        user &&
+        user?.email === process.env.NEXT_PUBLIC_OWNER_EMAIL && (
+          <div>
+            <Button>
+              <Link
+                href={`/dashboard/projects/${project?.data?.id}/updateProject`}
+              >
+                Update Project
+              </Link>
+            </Button>
+            <DeleteModal
+              onConfirm={() => project?.data?.id && handleDelete(project?.data)}
+            >
+              <Button>Delete</Button>
+            </DeleteModal>
+          </div>
+        )}
     </main>
   );
 };

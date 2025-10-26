@@ -2,9 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const BlogCard = ({ blog }) => {
+const PublicBlogCardPage = ({ blog }) => {
+
   return (
-    <Link href={`/dashboard/manageBlogs/${blog?.id}`}>
+    <Link href={`/blogs/${blog?.id}`}>
       {blog?.file ? (
         <div className="relative h-56 w-full overflow-hidden">
           <Image
@@ -29,4 +30,4 @@ const BlogCard = ({ blog }) => {
   );
 };
 
-export default BlogCard;
+export default PublicBlogCardPage;

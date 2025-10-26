@@ -23,7 +23,7 @@ const data = {
     },
     {
       title: "ALl Blogs",
-      url: "/dashboard/blogs",
+      url: "/dashboard/manageBlogs",
       isActive: true,
     },
     {

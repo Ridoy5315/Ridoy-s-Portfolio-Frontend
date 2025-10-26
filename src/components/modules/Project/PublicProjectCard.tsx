@@ -1,15 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
-const BlogCard = ({ blog }) => {
+const PublicProjectCardPage = ({ project }) => {
+
   return (
-    <Link href={`/dashboard/manageBlogs/${blog?.id}`}>
-      {blog?.file ? (
+    <Link href={`/projects/${project?.id}`}>
+      {project?.thumbnail ? (
         <div className="relative h-56 w-full overflow-hidden">
           <Image
-            src={blog.file}
-            alt={blog.title}
+            src={project.thumbnail}
+            alt={project.projectName}
             width={500}
             height={500}
             className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -21,12 +21,12 @@ const BlogCard = ({ blog }) => {
         </div>
       )}
       <div>
-        <p>{blog?.title}</p>
-        <p>{blog?.description}</p>
-        <p>{blog?.content}</p>
+        <p>{project?.projectName}</p>
+        <p>{project?.description}</p>
+        {/* <p>{project?.content}</p> */}
       </div>
     </Link>
   );
 };
 
-export default BlogCard;
+export default PublicProjectCardPage;
